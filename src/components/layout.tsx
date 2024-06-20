@@ -1,22 +1,27 @@
 'use client';
 
 import { useState } from 'react';
-import { FaBars, FaHome, FaUser, FaCog } from 'react-icons/fa';
-import Link from 'next/link';
 import { useMediaQuery } from 'react-responsive';
 import Sidebar from './sidebar';
+import Header from './header';
+import Footer from './footer';
 
+/**
+ * Layout component that defines the overall structure of the application layout.
+ * It includes a sidebar, header, main content area, and footer.
+ * @param {object} props - Component props.
+ * @param {React.ReactNode} props.children - The content to be rendered inside the layout.
+ */
 const Layout = ({ children }: { children: React.ReactNode }) => {
 	const [isMenuCollapsed, setIsMenuCollapsed] = useState(false);
 	const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 	const isMobile = useMediaQuery({ maxWidth: 767 });
 
-	const menuItems = [
-		{ title: 'Home', icon: <FaHome />, link: '/' },
-		{ title: 'Users', icon: <FaUser />, link: '/users' },
-		{ title: 'Settings', icon: <FaCog />, link: '/settings' },
-	];
-
+	/**
+	* Toggles the menu visibility based on the device type.
+	* If on mobile, toggles the mobile menu open/close.
+	* If on desktop, toggles the sidebar collapsed/expanded.
+	*/
 	const toggleMenu = () => {
 		if (isMobile) {
 			setIsMobileMenuOpen(!isMobileMenuOpen);
@@ -27,22 +32,11 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 
 	return (
 		<div className="flex h-screen">
-			<Sidebar
-				isMenuCollapsed={isMenuCollapsed}
-				isMobileMenuOpen={isMobileMenuOpen}
-				toggleMenu={toggleMenu}
-			/>
+			<Sidebar isMenuCollapsed={isMenuCollapsed} isMobileMenuOpen={isMobileMenuOpen} toggleMenu={toggleMenu} />
 			<div className="flex-1 flex flex-col">
-				<header className="shadow p-4 flex items-center justify-between">
-					<button onClick={toggleMenu} className={`text-2xl md:hidden`}>
-						<FaBars />
-					</button>
-					<h1 className="text-2xl">Dashboard</h1>
-				</header>
-				<main className="flex-1 overflow-y-auto p-4">{children}</main>
-				<footer className="shadow p-4 text-center">
-					&copy; 2024 Admin Dashboard
-				</footer>
+				<Header className="bg-muted/40" toggleMenu={toggleMenu} />
+				<main className="flex-1 overflow-y-auto p-4 bg-muted/40" role="main">{children}</main>
+				<Footer className="bg-muted/40" />
 			</div>
 		</div>
 	);

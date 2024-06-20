@@ -1,52 +1,46 @@
-import { useState } from 'react';
-import { FaBars, FaHome, FaUser, FaCog } from 'react-icons/fa';
-import Link from 'next/link';
+import { FaBars } from 'react-icons/fa';
 import { useMediaQuery } from 'react-responsive';
+import SidebarNav from './sidebarNav';
 import { Card } from './ui/card';
+import { Button } from './ui/button';
 import { cn } from '@/lib/utils';
 
+/**
+ * Sidebar component that displays a collapsible sidebar navigation.
+ * @param {object} props - Component props.
+ * @param {boolean} props.isMenuCollapsed - Whether the menu is collapsed or expanded.
+ * @param {boolean} props.isMobileMenuOpen - Whether the mobile menu is currently open.
+ * @param {Function} props.toggleMenu - Function to toggle the sidebar menu visibility.
+ */
+const Sidebar = ({ isMenuCollapsed, isMobileMenuOpen, toggleMenu }: SidebarProps) => {
+	const isMobile = useMediaQuery({ maxWidth: 767 });
+
+	return (
+		<aside
+			className={cn(
+				`${isMobile ? 'fixed z-50 inset-0' : 'relative'
+				} ${isMenuCollapsed ? 'w-14' : 'w-64'} ${isMobile && !isMobileMenuOpen ? 'w-0 hidden' : ''
+				} transition-all duration-300 border-r-2 shadow bg-background`
+			)}
+			role="navigation"
+		>
+			<Card className={cn("flex items-center justify-between p-4 rounded-none border-0 border-b")}>
+				<Button onClick={toggleMenu} className={cn("text-2xl p-0 py-3 h-0 text-white bg-transparent leading-none ")} aria-label="Toggle Menu">
+					<FaBars />
+				</Button>
+			</Card>
+			<SidebarNav isMenuCollapsed={isMenuCollapsed} />
+		</aside>
+	);
+};
+
+/**
+ * Props for the Sidebar component.
+ */
 interface SidebarProps {
 	isMenuCollapsed: boolean;
 	isMobileMenuOpen: boolean;
 	toggleMenu: () => void;
 }
-
-const Sidebar = ({ isMenuCollapsed, isMobileMenuOpen, toggleMenu }: SidebarProps) => {
-	const isMobile = useMediaQuery({ maxWidth: 767 });
-
-	const menuItems = [
-		{ title: 'Home', icon: <FaHome />, link: '/' },
-		{ title: 'Users', icon: <FaUser />, link: '/users' },
-		{ title: 'Settings', icon: <FaCog />, link: '/settings' },
-	];
-
-	return (
-		<aside
-			className={`${isMobile ? 'fixed z-50 inset-0' : 'relative'
-				} ${isMenuCollapsed ? 'w-14' : 'w-64'} ${isMobile && !isMobileMenuOpen ? 'w-0 hidden' : ''
-				} transition-all duration-300 border-r-2 bg-background`}
-		>
-			<Card className={cn("flex items-center justify-between p-4 border-0 border-b")}>
-				<button onClick={toggleMenu} className="text-2xl">
-					<FaBars />
-				</button>
-			</Card>
-			<nav className="mt-4">
-				<ul>
-					{menuItems.map((item) => (
-						<li key={item.title} className="hover:bg-primary-foreground min-h-[58px]">
-							<Link href={item.link} className="flex items-center p-4 leading-none">
-								<span className="text-xl">{item.icon}</span>
-								<span className={`${isMenuCollapsed ? 'hidden' : 'ml-4'} transition-all duration-300`}>
-									{item.title}
-								</span>
-							</Link>
-						</li>
-					))}
-				</ul>
-			</nav>
-		</aside>
-	);
-};
 
 export default Sidebar;
