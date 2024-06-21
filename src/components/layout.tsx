@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { QueryClient, QueryClientProvider } from 'react-query';
 import { useMediaQuery } from 'react-responsive';
 import Sidebar from './sidebar';
 import Header from './header';
@@ -31,14 +32,16 @@ const Layout = ({ children }: { children: React.ReactNode }) => {
 	};
 
 	return (
-		<div className="flex h-screen">
-			<Sidebar isMenuCollapsed={isMenuCollapsed} isMobileMenuOpen={isMobileMenuOpen} toggleMenu={toggleMenu} />
-			<div className="flex-1 flex flex-col">
-				<Header className="bg-muted/40" toggleMenu={toggleMenu} />
-				<main className="flex-1 overflow-y-auto p-4 bg-muted/40" role="main">{children}</main>
-				<Footer className="bg-muted/40" />
+		<QueryClientProvider client={new QueryClient()}>
+			<div className="flex h-screen">
+				<Sidebar isMenuCollapsed={isMenuCollapsed} isMobileMenuOpen={isMobileMenuOpen} toggleMenu={toggleMenu} />
+				<div className="flex-1 flex flex-col">
+					<Header className="bg-muted/40" toggleMenu={toggleMenu} />
+					<main className="flex-1 overflow-y-auto p-4 bg-muted/40" role="main">{children}</main>
+					<Footer className="bg-muted/40" />
+				</div>
 			</div>
-		</div>
+		</QueryClientProvider>
 	);
 };
 
