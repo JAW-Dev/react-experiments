@@ -4,7 +4,7 @@ import "./globals.css";
 import { cn } from "@/lib/utils"
 import { ThemeProvider } from "@/context/ThemeProvider"
 
-import Layout from "@/components/layout";
+import Layout from "@/components/layout/layout";
 
 const fontSans = FontSans({
   subsets: ["latin"],

@@ -1,8 +1,8 @@
 import { FaBars } from 'react-icons/fa';
 import { useMediaQuery } from 'react-responsive';
 import SidebarNav from './sidebarNav';
-import { Card } from './ui/card';
-import { Button } from './ui/button';
+import { Card } from '../../ui/card';
+import { Button } from '../../ui/button';
 import { cn } from '@/lib/utils';
 
 /**

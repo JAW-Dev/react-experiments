@@ -1,5 +1,5 @@
-import DarkmodeToggle from './darkmode-toggle';
-import { Card } from './ui/card';
+import DarkmodeToggle from '@/components/darkmode-toggle';
+import { Card } from '@/components/ui/card';
 import { cn } from '@/lib/utils';
 
 
