@@ -58,7 +58,7 @@ const UsersPage = () => {
 				itemsPerPage={pageSize} // Number of items per page
 				currentPage={page} // Current active page
 				onPageChange={setPage} // Function to change active page
-				numbersToShow={5} // Number of page numbers to show in pagination component
+				numbersToShow={4} // Number of page numbers to show in pagination component
 			/>
 		</div>
 	);

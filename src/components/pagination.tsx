@@ -36,22 +36,29 @@ const PaginationComp: React.FC<PaginationProps> = ({
 		} else {
 			setTotalPages(0);
 		}
-	}, [totalItems, itemsPerPage]); // Update when totalItems or itemsPerPage change
+	}, [totalItems, itemsPerPage]);
 
+	// Determine if current page is the first or last page
+	const isFirstPage = currentPage === 1;
+	const isLastPage = currentPage === totalPages || totalPages === 0;
+
+	// Function to render the pagination links
 	const renderPagination = () => {
 		if (totalPages <= 1) {
-			return null; // Render nothing if only one page or no pages
+			return null; // If there is only one page, do not render pagination links
 		}
 
-		// Logic to determine which pages to display
+		// Calculate range of page numbers to display
 		let start = Math.max(1, currentPage - Math.floor(numbersToShow / 2));
 		let end = start + numbersToShow - 1;
 
+		// Adjust end if it exceeds total pages
 		if (end > totalPages) {
 			end = totalPages;
 			start = Math.max(1, end - numbersToShow + 1);
 		}
 
+		// Prepare array of pagination items
 		const pages = [];
 		for (let i = start; i <= end; i++) {
 			pages.push(
@@ -80,18 +87,31 @@ const PaginationComp: React.FC<PaginationProps> = ({
 			);
 		}
 
-		return pages;
+		return pages; // Return the array of pagination items
 	};
 
 	return (
 		<Pagination>
 			<PaginationContent>
+				{/* Previous button */}
 				<PaginationItem>
-					<PaginationPrevious href="#" onClick={() => onPageChange(currentPage - 1)} />
+					<PaginationPrevious
+						href="#"
+						onClick={() => !isFirstPage && onPageChange(currentPage - 1)}
+						className={isFirstPage ? 'opacity-50 cursor-default' : ''}
+					/>
 				</PaginationItem>
+
+				{/* Render pagination links */}
 				{renderPagination()}
+
+				{/* Next button */}
 				<PaginationItem>
-					<PaginationNext href="#" onClick={() => onPageChange(currentPage + 1)} />
+					<PaginationNext
+						href="#"
+						onClick={() => !isLastPage && onPageChange(currentPage + 1)}
+						className={isLastPage ? 'opacity-50 cursor-default' : ''}
+					/>
 				</PaginationItem>
 			</PaginationContent>
 		</Pagination>
