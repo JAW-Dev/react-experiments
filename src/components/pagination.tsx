@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
-import { cn } from '@/lib/utils'; // Assuming utility function for classNames
-import { PaginationProps } from '@/types'; // Assuming '@/types' contains PaginationProps type definition
+import { cn } from '@/lib/utils';
+import { PaginationProps } from '@/types';
 import {
 	Pagination,
 	PaginationContent,
