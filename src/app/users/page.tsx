@@ -1,37 +1,31 @@
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import { User } from '@/types';
 import PaginationComp from '@/components/pagination';
-import { useQuery, QueryFunctionContext } from 'react-query';
+import { useQuery } from 'react-query';
 
 /**
  * Users page component that fetches and displays a list of users with pagination.
  */
 const UsersPage = () => {
-	// State variables
 	const [page, setPage] = useState<number>(1); // Current page number
-	const [data, setData] = useState<User[]>([]); // Array of users fetched from API
-	const [error, setError] = useState<Error | null>(null); // Error state for API fetch
-	const [isLoading, setIsLoading] = useState<boolean>(false); // Loading state while fetching data
-	const pageSize = 10; // Number of items per page
-	const visibleNumbers = 4; // Number of page numbers to show in pagination component
+	const itemsPerPage = 10; // Number of items per page
+	const numbersToShow = 4; // Number of page numbers to show in pagination component
 
-	// Fetch users from API on component mount
-	useQuery('users', async () => {
-		try {
-			const response = await fetch('http://localhost:3001/users'); // Fetch users from API
-			const result: User[] = await response.json(); // Parse JSON response
-			setData(result); // Set fetched data to state
-		} catch (err) {
-			setError(err as Error); // Catch and set error if fetch fails
-		} finally {
-			setIsLoading(false); // Stop loading, whether successful or not
+	// Query users from API
+	const { data, error, isLoading } = useQuery<User[]>('users', async () => {
+		const response = await fetch('http://localhost:3001/users');
+		if (!response.ok) {
+			throw new Error('Failed to load users');
 		}
+		return response.json();
 	});
 
+	// Ensure data is defined before accessing it
+	const totalItems = data ? data.length : 0;
 	// Calculate currently visible data based on pagination
-	const currentPageData = data.slice((page - 1) * pageSize, page * pageSize);
+	const currentPageData = data ? data.slice((page - 1) * itemsPerPage, page * itemsPerPage) : [];
 
 	// Render loading indicator while fetching data
 	if (isLoading) return <div>Loading...</div>;
@@ -44,18 +38,18 @@ const UsersPage = () => {
 		<div>
 			<h1>Users Page</h1>
 			<ul>
-				{currentPageData.map((user) => (
+				{currentPageData?.map((user) => (
 					<li key={user.id}>
 						{user.firstName} {user.lastName} - {user.email}
 					</li>
 				))}
 			</ul>
 			<PaginationComp
-				totalItems={data.length} // Total number of users
-				itemsPerPage={pageSize} // Number of items per page
+				totalItems={totalItems} // Total number of users
+				itemsPerPage={itemsPerPage} // Number of items per page
 				currentPage={page} // Current active page
 				onPageChange={setPage} // Function to change active page
-				numbersToShow={visibleNumbers} // Number of page numbers to show in pagination component
+				numbersToShow={numbersToShow} // Number of page numbers to show in pagination component
 			/>
 		</div>
 	);
